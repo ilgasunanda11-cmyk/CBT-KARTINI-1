@@ -17,10 +17,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-audit --no-fund
+          fi
 
       - name: Validate build and tests before deployment
         run: |
@@ -39,5 +43,4 @@ jobs:
             exit 0
           fi
           echo "Deploying KARTINI CBT 4.0 artifact to $DEPLOY_HOST:$DEPLOY_PATH"
-          # Configure SSH key via secrets.DEPLOY_SSH_KEY and run rsync + pm2/systemd restart in production
           echo "Deployment hook ready."

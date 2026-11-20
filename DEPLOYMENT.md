@@ -30,5 +30,8 @@ NODE_ENV=production npm start
 
 ## Troubleshooting
 
+- **GitHub Actions only shows `pages build and deployment` & website is blank**:
+  1. **GitHub Pages cannot run KARTINI CBT 4.0**: GitHub Pages only serves static HTML/CSS/JS and attempts to serve the uncompiled root `index.html` (`/src/main.tsx`), which results in a blank page and no backend API/SQLite/WebSocket server. Disable GitHub Pages (`Settings → Pages → Source: None`) and run the application on a Node.js host (AI Studio App URL, VPS, Railway, Render, or Docker/Cloud Run).
+  2. **Missing `.github/workflows` on GitHub**: Browser drag-and-drop uploads ("Upload files" on GitHub Web) often skip hidden dot-folders such as `.github/`. Push via Git CLI (`git push -u origin main` and `git push -u origin develop`) so all 3 workflows (`KARTINI CBT 4.0 CI`, `KARTINI CBT 4.0 Deploy`, and `KARTINI CBT 4.0 Backup`) appear under **Actions**.
 - **Audio/Image upload rejected**: Check file extension, genuine MIME/magic bytes, and size limits (`10 MB` images, `25 MB` audio, configurable in Admin Settings).
 - **WebSocket not connecting behind reverse proxy (Nginx/Caddy)**: Ensure `Upgrade` and `Connection: upgrade` headers are forwarded on `/ws`.
