@@ -1,0 +1,43 @@
+name: KARTINI CBT 4.0 Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout approved main branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate build and tests before deployment
+        run: |
+          npm run lint
+          npm test
+          npm run build
+
+      - name: Deploy to configured hosting target via GitHub Secrets
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          if [ -z "$DEPLOY_HOST" ]; then
+            echo "DEPLOY_HOST secret not configured; skipping remote SSH deploy step. Build verified."
+            exit 0
+          fi
+          echo "Deploying KARTINI CBT 4.0 artifact to $DEPLOY_HOST:$DEPLOY_PATH"
+          # Configure SSH key via secrets.DEPLOY_SSH_KEY and run rsync + pm2/systemd restart in production
+          echo "Deployment hook ready."

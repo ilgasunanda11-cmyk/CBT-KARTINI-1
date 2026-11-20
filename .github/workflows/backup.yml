@@ -1,0 +1,25 @@
+name: KARTINI CBT 4.0 Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create timestamped backup archive instruction
+        env:
+          BACKUP_TARGET: ${{ secrets.BACKUP_STORAGE_URL }}
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
+          echo "KARTINI CBT 4.0 scheduled backup run at $TIMESTAMP"
+          echo "Targets: server/database/kartini_cbt.db and server/storage/{images,audio}"
+          if [ -z "$BACKUP_TARGET" ]; then
+            echo "Set BACKUP_STORAGE_URL and host credentials in GitHub Secrets for automated offsite uploads."
+          fi

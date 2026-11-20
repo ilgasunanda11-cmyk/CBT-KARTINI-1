@@ -1,0 +1,6 @@
+{
+  "name": "KARTINI CBT 4.0",
+  "description": "Computer-Based Test Online Examination Management System for SMP Kartini 1 Batam — Yayasan Keluarga Batam.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
